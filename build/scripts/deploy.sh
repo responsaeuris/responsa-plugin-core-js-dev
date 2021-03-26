@@ -6,7 +6,7 @@ echo "" && echo "***********************************************************" &&
 cd /
 git clone --branch $GIT_BRANCH https://$GIT_USERNAME:$GIT_PASSWORD@$GIT_REPO public-repo
 cd /public-repo
-git chackout $GIT_BRANCH
+git checkout $GIT_BRANCH
 
 echo "Add GitHub repo as local repo remote"
 git remote add -t $GIT_BRANCH secondary https://$PUBLIC_GIT_USERNAME:$PUBLIC_GIT_PASSWORD@$PUBLIC_GIT_REPO
