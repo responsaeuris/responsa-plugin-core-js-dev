@@ -6,6 +6,7 @@ echo "" && echo "***********************************************************" &&
 cd /
 git clone --branch $GIT_BRANCH https://$GIT_USERNAME:$GIT_PASSWORD@$GIT_REPO public-repo
 cd /public-repo
+git chackout $GIT_BRANCH
 
 echo "Add GitHub repo as local repo remote"
 git remote add -t $GIT_BRANCH secondary https://$PUBLIC_GIT_USERNAME:$PUBLIC_GIT_PASSWORD@$PUBLIC_GIT_REPO
@@ -13,11 +14,6 @@ git remote add -t $GIT_BRANCH secondary https://$PUBLIC_GIT_USERNAME:$PUBLIC_GIT
 echo "Setting public repo commit infos"
 git config --global user.email "$PUBLIC_GIT_USER_EMAIL"
 git config --global user.name "$PUBLIC_GIT_USERNAME"
-
-echo "Deleting public repo branch $GIT_BRANCH"
-set +e
-git push secondary --delete $GIT_BRANCH
-set -e
 
 echo "Updating status route"
 /_/build/scripts/pre-build.sh
@@ -28,7 +24,7 @@ git add app/routes/status/statusRoute.js
 git commit -m "$LAST_COMMIT CI fingerprint"
 
 echo "Pushing to GitHub"
-git push secondary
+git push --mirror secondary
 
 echo "done"
 
