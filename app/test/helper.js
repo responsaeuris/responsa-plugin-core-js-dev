@@ -65,6 +65,10 @@ const addErrorRoutes = (app) => {
   app.get('/valid-response-schema', { schema: responseSchema }, async (req, reply) => {
     reply.send({ field: 'value' })
   })
+
+  app.get('/verify-auth', async (req, reply) => {
+    reply.code(200).send()
+  })
 }
 
 /* eslint-disable global-require */
@@ -75,7 +79,14 @@ const setupApp = async (config) => {
   conf.prefix = '/core'
 
   const app = fastify()
+  app.decorate('auth', (req, res, next) => {
+    if (req.headers['x-secret'] !== undefined && req.headers['x-secret'].toString() === 'secret') {
+      return next()
+    }
+    res.code(401)
 
+    return next(new Error('Unauthorized'))
+  })
   app.register(require('..'), conf)
 
   addErrorRoutes(app)

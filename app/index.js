@@ -127,6 +127,14 @@ module.exports = fp(
       options: { ...opts },
     })
 
+    f.addHook('preHandler', (request, reply, done) => {
+      if (!isUnrestrictedRoute(request.url) && f.auth) {
+        f.auth(request, reply, done)
+      } else {
+        done()
+      }
+    })
+
     f.addHook('onRequest', (request, reply, done) => {
       if (!isUnrestrictedRoute(request.url)) checkHeaders(request.headers)
       done()
