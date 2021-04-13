@@ -197,6 +197,7 @@ describe('Logger Formatter', () => {
   const requiredHeaders = {
     'X-ConversationId': 4,
     'X-ResponsaTS': 12312315648974,
+    'x-secret': 'secret',
   }
   it('logs message with res, req and elapsed', async () => {
     const qry = 'param1=1'

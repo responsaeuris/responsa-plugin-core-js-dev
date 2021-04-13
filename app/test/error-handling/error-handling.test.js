@@ -4,6 +4,7 @@ const helper = require('../helper')
 const requiredHeaders = {
   'X-ConversationId': 4,
   'X-ResponsaTS': 12312315648974,
+  'x-secret': 'secret',
 }
 
 describe('error handling', () => {
@@ -90,5 +91,29 @@ describe('responsa headers', () => {
     )
     expect(response.raw.res.getHeader('X-ClientTS')).toBeDefined()
     expect(response.raw.res.getHeader('X-ClientTS')).toBeNumber()
+  })
+})
+
+describe('auth secret', () => {
+  it('authenticate request with correct secret', async () => {
+    const app = await helper.setupApp()
+    const response = await helper.doGet(app, '/verify-auth', {
+      'X-ConversationId': 4,
+      'X-ResponsaTS': 12312315648974,
+      'x-secret': 'secret',
+    })
+
+    expect(response.statusCode).toEqual(200)
+  })
+
+  it('returns unauthorized with invalid secret', async () => {
+    const app = await helper.setupApp()
+    const response = await helper.doGet(app, '/verify-auth', {
+      'X-ConversationId': 4,
+      'X-ResponsaTS': 12312315648974,
+      'x-secret': 'invalid-secret',
+    })
+
+    expect(response.statusCode).toEqual(401)
   })
 })
