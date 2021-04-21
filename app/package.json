@@ -11,7 +11,7 @@
     "preinstall": "echo \"updating outer package.json\" && npm i shx && shx cp package.json ../package.json && echo \"Done!\"",
     "postinstall": "shx sed -i \"s/preinstall/do_not_run/g\" ../package.json && shx sed -i \"s/postinstall/do_not_run2/g\" ../package.json",
     "test": "npm run lint && npm run jest",
-    "lint": "eslint . test/. --config .eslintrc.json --fix --max-warnings=10",
+    "lint": "standard ./",
     "jest": "node --trace-warnings node_modules/.bin/jest --detectOpenHandles --watchAll",
     "jest:ci": "jest --forceExit --ci --testResultsProcessor=jest-multiple-result-processors --coverage=true",
     "start": "node ./examples/basic/server.js",
@@ -38,21 +38,13 @@
     "pino-multi-stream": "^5.1.1"
   },
   "devDependencies": {
-    "eslint": "^7.2.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^7.0.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^3.2.0",
-    "eslint-plugin-react": "^7.21.5",
-    "eslint-plugin-react-hooks": "^4.0.0",
     "jest": "^26.6.3",
     "jest-extended": "^0.11.5",
     "jest-junit-reporter": "^1.1.0",
     "jest-multiple-result-processors": "^0.0.3",
     "jest-sonar-reporter": "^2.0.0",
-    "prettier": "^2.2.1",
-    "shx": "^0.3.3"
+    "shx": "^0.3.3",
+    "standard": "^16.0.3"
   },
   "jestTestResultProcessors": [
     "jest-junit-reporter",
@@ -62,5 +54,20 @@
     "reportPath": ".",
     "reportFile": "test-report-sonar.xml",
     "indent": 4
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ],
+    "globals": [
+      "describe",
+      "test"
+    ]
+  },
+  "standard.options": {
+    "ignore": [
+      "node_modules/**"
+    ],
+    "parser": "babel-eslint"
   }
 }

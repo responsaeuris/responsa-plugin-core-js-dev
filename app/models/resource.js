@@ -1,6 +1,6 @@
 const inputType = (data) => ({
   isString: typeof data === 'string',
-  isComplex: typeof data === 'object',
+  isComplex: typeof data === 'object'
 })
 
 const stringArray = (gallery) => {

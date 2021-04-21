@@ -2,5 +2,5 @@ module.exports = {
   CACHE_EXPIRATION_SECONDS: 86400,
   HEADER_CONVERSATION_ID: 'X-ConversationId',
   HEADER_RESPONSA_TS: 'X-ResponsaTS',
-  HEADER_CLIENT_TS: 'X-ClientTS',
+  HEADER_CLIENT_TS: 'X-ClientTS'
 }

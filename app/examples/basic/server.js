@@ -1,16 +1,21 @@
 const fastify = require('fastify')
 const pluginCore = require('../..')
+const schemas = require('./schemas')
 
 const elasticOptions = {
   uri: 'https://localhost:9200',
   user: 'newboss',
   password: 'newboss',
-  index: 'some-index',
+  index: 'some-index'
 }
 
 const app = fastify({ logger: pluginCore.loggerFactory(elasticOptions) })
+app.addSchema(schemas.sample0)
+app.addSchema(schemas.sample1)
 
-app.register(pluginCore, { prefix: '/core' })
+app.register(pluginCore, {
+  prefix: '/core'
+})
 app.log.info('started')
 
 app.get('/', async (req, reply) => {

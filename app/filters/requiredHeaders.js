@@ -10,17 +10,13 @@ module.exports = (headers) => {
   const ResponsaTsKey = Object.getOwnPropertyNames(headers).filter(
     (key) => key.toLowerCase() === config.HEADER_RESPONSA_TS.toLowerCase()
   )
-  if (ConversationIdKey.length === 0)
-    throw new HeadersBadRequestError('Missing required "X-ConversationId" request header')
+  if (ConversationIdKey.length === 0) { throw new HeadersBadRequestError('Missing required "X-ConversationId" request header') }
 
-  if (ResponsaTsKey.length === 0)
-    throw new HeadersBadRequestError('Missing required "X-ResponsaTS" request header')
+  if (ResponsaTsKey.length === 0) { throw new HeadersBadRequestError('Missing required "X-ResponsaTS" request header') }
 
   const convId = parseInt(headers[ConversationIdKey], 10)
-  if (Number.isNaN(convId))
-    throw new HeadersBadRequestError('"X-ConversationId" request header must be a number')
+  if (Number.isNaN(convId)) { throw new HeadersBadRequestError('"X-ConversationId" request header must be a number') }
 
   const resTS = parseFloat(headers[ResponsaTsKey], 10)
-  if (Number.isNaN(resTS))
-    throw new HeadersBadRequestError('"X-ResponsaTS" request header must be a a valid timestamp')
+  if (Number.isNaN(resTS)) { throw new HeadersBadRequestError('"X-ResponsaTS" request header must be a a valid timestamp') }
 }

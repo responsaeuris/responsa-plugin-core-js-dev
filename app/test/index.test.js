@@ -57,7 +57,7 @@ describe('options loading', () => {
   })
   it('loads translations', async () => {
     const response = await getSwaggerInfo({
-      translationsKeys: ['key1', 'key2'],
+      translationsKeys: ['key1', 'key2']
     })
 
     const actual = response['x-translations']
@@ -84,6 +84,19 @@ describe('options loading', () => {
     expect(actual).toBeDefined()
     expect(actual).toBeInstanceOf(Object)
   })
+
+  it('loads external schemas with addToSwagger === true', async () => {
+    const response = await getSwagger()
+    const actual = response.components.schemas.sample1
+    expect(actual).toBeDefined()
+    expect(actual).toBeInstanceOf(Object)
+  })
+
+  it('doesn\'t load external schemas without addToSwagger', async () => {
+    const response = await getSwagger()
+    const actual = response.components.schemas.sample0
+    expect(actual).not.toBeDefined()
+  })
 })
 
 describe('single choice resource', () => {
@@ -107,7 +120,7 @@ describe('logger factory', () => {
     uri: 'https://localhost:9200',
     user: 'newboss',
     password: 'newboss',
-    index: 'some-index',
+    index: 'some-index'
   }
 
   const getLoggerStreams = (logger) =>
@@ -197,7 +210,7 @@ describe('Logger Formatter', () => {
   const requiredHeaders = {
     'X-ConversationId': 4,
     'X-ResponsaTS': 12312315648974,
-    'x-secret': 'secret',
+    'x-secret': 'secret'
   }
   it('logs message with res, req and elapsed', async () => {
     const qry = 'param1=1'

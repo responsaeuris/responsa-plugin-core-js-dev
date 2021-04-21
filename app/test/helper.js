@@ -1,11 +1,12 @@
 const fastify = require('fastify')
+const schemas = require('../examples/basic/schemas')
 const cache = require('../cache/cache')
 
 const doGet = async (fastifyInstance, path, headers) => {
   const serverResponse = await fastifyInstance.inject({
     url: path,
     method: 'GET',
-    headers,
+    headers
   })
   return serverResponse
 }
@@ -13,9 +14,14 @@ const doGet = async (fastifyInstance, path, headers) => {
 const doPost = async (fastifyInstance, path) => {
   const serverResponse = await fastifyInstance.inject({
     url: path,
-    method: 'POST',
+    method: 'POST'
   })
   return serverResponse
+}
+
+const addSampleSchemas = (app) => {
+  app.addSchema(schemas.sample0)
+  app.addSchema(schemas.sample1)
 }
 
 const addErrorRoutes = (app) => {
@@ -23,19 +29,19 @@ const addErrorRoutes = (app) => {
     querystring: {
       type: 'object',
       properties: {
-        param1: { type: 'string', description: 'Mandatory querystring param' },
+        param1: { type: 'string', description: 'Mandatory querystring param' }
       },
-      required: ['param1'],
-    },
+      required: ['param1']
+    }
   }
 
   const responseSchema = {
     response: {
       200: {
         type: 'object',
-        properties: { field: { type: 'string' } },
-      },
-    },
+        properties: { field: { type: 'string' } }
+      }
+    }
   }
 
   app.get(
@@ -89,6 +95,7 @@ const setupApp = async (config) => {
   })
   app.register(require('..'), conf)
 
+  addSampleSchemas(app)
   addErrorRoutes(app)
 
   return app.ready()
