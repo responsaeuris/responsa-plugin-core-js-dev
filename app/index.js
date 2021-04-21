@@ -24,10 +24,10 @@ const defaultOptions = {
   esIndex: 'app-name-v1',
   servers: [
     { url: 'server1 url', description: 'server1 description' },
-    { url: 'server2 url', description: 'server2 description' },
+    { url: 'server2 url', description: 'server2 description' }
   ],
   translationsKeys: [],
-  unrestrictedRoutes: [],
+  unrestrictedRoutes: []
 }
 
 const isUnrestrictedRoute = (url) => {
@@ -42,12 +42,12 @@ const elasticStreamFactory = (options) => ({
     node: options.uri,
     auth: {
       username: options.user,
-      password: options.password,
+      password: options.password
     },
     rejectUnauthorized: false,
     'es-version': 7,
-    'flush-bytes': 10,
-  }),
+    'flush-bytes': 10
+  })
 })
 
 const loggerFilter = (input) => {
@@ -78,25 +78,25 @@ const loggerFormatter = (req, res, err, elapsed) => ({
   StatusCode: res.statusCode,
   Elapsed: elapsed || 0,
   exceptionMessage: err ? err.message : '',
-  exceptionStackTrace: err ? err.stack : '',
+  exceptionStackTrace: err ? err.stack : ''
 })
 
 const loggerFactory = (elasticOptions) => {
   const streams = [{ stream: process.stdout }]
 
   const hooks = {
-    logMethod(inputArgs, method) {
+    logMethod (inputArgs, method) {
       const data = loggerFilter(inputArgs)
       if (data) return method.apply(this, inputArgs)
       return null
-    },
+    }
   }
 
   const formatters = {
-    bindings(bindings) {
+    bindings (bindings) {
       return { pid: bindings.pid, machineName: bindings.hostname }
     },
-    log(input) {
+    log (input) {
       if (typeof input === 'string' || !input.res) return input
 
       const { res } = input
@@ -104,7 +104,7 @@ const loggerFactory = (elasticOptions) => {
       const { request } = res
 
       return loggerFormatter(request, res.raw, err, input.responseTime)
-    },
+    }
   }
 
   if (elasticOptions) {
@@ -113,6 +113,24 @@ const loggerFactory = (elasticOptions) => {
 
   const logger = pino({ level: 'info', hooks, formatters }, pinoms.multistream(streams))
   return logger
+}
+
+const getSchemas = (f) => {
+  const schemas = f.getSchemas()
+
+  const schemasToAdd = {}
+  Object.entries(schemas).forEach(([key, value]) => {
+    if (value.addToSwagger === true) {
+      schemasToAdd[key] = value
+    }
+  })
+
+  return {
+    ResponsaSingleChoiceResource,
+    Error: errorSchema,
+    ResponsaRichMessageResource,
+    ...schemasToAdd
+  }
 }
 
 module.exports = fp(
@@ -124,7 +142,7 @@ module.exports = fp(
 
     f.register(autoload, {
       dir: path.join(__dirname, 'routes'),
-      options: { ...opts },
+      options: { ...opts }
     })
 
     f.addHook('preHandler', (request, reply, done) => {
@@ -142,16 +160,18 @@ module.exports = fp(
 
     f.addHook('onSend', (request, reply, payload, done) => {
       if (!isUnrestrictedRoute(request.url)) {
-        if (!reply.raw.getHeader(config.HEADER_CONVERSATION_ID))
+        if (!reply.raw.getHeader(config.HEADER_CONVERSATION_ID)) {
           reply.raw.setHeader(
             config.HEADER_CONVERSATION_ID,
             request.headers[config.HEADER_CONVERSATION_ID.toLowerCase()]
           )
-        if (!reply.raw.getHeader(config.HEADER_RESPONSA_TS))
+        }
+        if (!reply.raw.getHeader(config.HEADER_RESPONSA_TS)) {
           reply.raw.setHeader(
             config.HEADER_RESPONSA_TS,
             request.headers[config.HEADER_RESPONSA_TS.toLowerCase()]
           )
+        }
         reply.raw.setHeader(config.HEADER_CLIENT_TS, Date.now())
       }
       Object.assign(reply.raw, { payload })
@@ -171,21 +191,17 @@ module.exports = fp(
           title: options.appName,
           version: options.apiVersion,
           'x-translations': translationsKeys,
-          'x-log-index': options.esIndex.toLowerCase(),
+          'x-log-index': options.esIndex.toLowerCase()
         },
         consumes: ['application/json'],
         produces: ['application/json'],
         servers: options.servers,
         components: {
-          schemas: {
-            ResponsaSingleChoiceResource,
-            Error: errorSchema,
-            ResponsaRichMessageResource,
-          },
-        },
+          schemas: getSchemas(f)
+        }
       },
       exposeRoute: true,
-      openapi: '3.0.3',
+      openapi: '3.0.3'
     })
 
     next()

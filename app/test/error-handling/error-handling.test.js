@@ -4,7 +4,7 @@ const helper = require('../helper')
 const requiredHeaders = {
   'X-ConversationId': 4,
   'X-ResponsaTS': 12312315648974,
-  'x-secret': 'secret',
+  'x-secret': 'secret'
 }
 
 describe('error handling', () => {
@@ -66,7 +66,7 @@ describe('responsa headers', () => {
   it('400 w/o conversationId', async () => {
     const sut = await helper.setupApp()
     const response = await helper.doGet(sut, '/valid-response-schema', {
-      'X-ResponsaTS': Date.now(),
+      'X-ResponsaTS': Date.now()
     })
     expect(response.statusCode).toEqual(400)
   })
@@ -100,7 +100,7 @@ describe('auth secret', () => {
     const response = await helper.doGet(app, '/verify-auth', {
       'X-ConversationId': 4,
       'X-ResponsaTS': 12312315648974,
-      'x-secret': 'secret',
+      'x-secret': 'secret'
     })
 
     expect(response.statusCode).toEqual(200)
@@ -111,7 +111,7 @@ describe('auth secret', () => {
     const response = await helper.doGet(app, '/verify-auth', {
       'X-ConversationId': 4,
       'X-ResponsaTS': 12312315648974,
-      'x-secret': 'invalid-secret',
+      'x-secret': 'invalid-secret'
     })
 
     expect(response.statusCode).toEqual(401)
