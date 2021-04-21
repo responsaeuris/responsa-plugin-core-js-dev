@@ -1,5 +1,4 @@
 const fp = require('fastify-plugin')
-const oas = require('fastify-oas')
 const autoload = require('fastify-autoload')
 const path = require('path')
 const pino = require('pino')
@@ -12,8 +11,8 @@ const { toRich, ResponsaRichMessageResource } = require('./models/richMessage')
 const errorSchema = require('./models/error')
 const config = require('./config/constants')
 const checkHeaders = require('./filters/requiredHeaders')
+const setupDocumentation = require('./documentation/setup')
 
-let translationsKeys = null
 let unrestrictedRoutes = null
 
 const isEmptyObject = (obj) => Object.keys(obj).length === 0 && typeof obj === 'object'
@@ -115,24 +114,6 @@ const loggerFactory = (elasticOptions) => {
   return logger
 }
 
-const getSchemas = (f) => {
-  const schemas = f.getSchemas()
-
-  const schemasToAdd = {}
-  Object.entries(schemas).forEach(([key, value]) => {
-    if (value.addToSwagger === true) {
-      schemasToAdd[key] = value
-    }
-  })
-
-  return {
-    ResponsaSingleChoiceResource,
-    Error: errorSchema,
-    ResponsaRichMessageResource,
-    ...schemasToAdd
-  }
-}
-
 module.exports = fp(
   async (fastify, opts, next) => {
     const f = fastify
@@ -183,26 +164,7 @@ module.exports = fp(
     f.decorate('singleChoice', toSingle)
     f.decorate('richMessage', toRich)
 
-    translationsKeys = options.translationsKeys
-
-    f.register(oas, {
-      swagger: {
-        info: {
-          title: options.appName,
-          version: options.apiVersion,
-          'x-translations': translationsKeys,
-          'x-log-index': options.esIndex.toLowerCase()
-        },
-        consumes: ['application/json'],
-        produces: ['application/json'],
-        servers: options.servers,
-        components: {
-          schemas: getSchemas(f)
-        }
-      },
-      exposeRoute: true,
-      openapi: '3.0.3'
-    })
+    setupDocumentation(f, options)
 
     next()
   },
