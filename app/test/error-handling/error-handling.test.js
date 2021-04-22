@@ -116,4 +116,14 @@ describe('auth secret', () => {
 
     expect(response.statusCode).toEqual(401)
   })
+
+  it('returns unauthorized with missing secret headers', async () => {
+    const app = await helper.setupApp()
+    const response = await helper.doGet(app, '/verify-auth', {
+      'X-ConversationId': 4,
+      'X-ResponsaTS': 12312315648974
+    })
+
+    expect(response.statusCode).toEqual(401)
+  })
 })

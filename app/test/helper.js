@@ -1,5 +1,6 @@
 const fastify = require('fastify')
-const schemas = require('../examples/basic/schemas')
+const schemas = require('../examples/basic/utils/schemas')
+const authRouteSchema = require('../examples/basic/utils/auth-route-options')
 const cache = require('../cache/cache')
 
 const doGet = async (fastifyInstance, path, headers) => {
@@ -72,7 +73,7 @@ const addErrorRoutes = (app) => {
     reply.send({ field: 'value' })
   })
 
-  app.get('/verify-auth', async (req, reply) => {
+  app.get('/verify-auth', authRouteSchema, async (req, reply) => {
     reply.code(200).send()
   })
 }
