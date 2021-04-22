@@ -9,7 +9,12 @@ const getSchemas = (f) => {
   const schemasToAdd = {}
   Object.entries(schemas).forEach(([key, value]) => {
     if (value.addToSwagger === true) {
-      schemasToAdd[key] = value
+      const schema = JSON.parse(JSON.stringify(value))
+      if (schema.$id) {
+        delete schema.$id
+      }
+      delete schema.addToSwagger
+      schemasToAdd[key] = schema
     }
   })
 
@@ -34,7 +39,14 @@ module.exports = (f, options) => {
       produces: ['application/json'],
       servers: options.servers,
       components: {
-        schemas: getSchemas(f)
+        schemas: getSchemas(f),
+        securitySchemes: {
+          ApiKeyAuth: {
+            type: 'apiKey',
+            in: 'header',
+            name: 'x-secret'
+          }
+        }
       }
     },
     exposeRoute: true,

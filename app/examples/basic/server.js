@@ -1,6 +1,7 @@
 const fastify = require('fastify')
 const pluginCore = require('../..')
-const schemas = require('./schemas')
+const schemas = require('./utils/schemas')
+const authRouteSchema = require('./utils/auth-route-options')
 
 const elasticOptions = {
   uri: 'https://localhost:9200',
@@ -24,6 +25,10 @@ app.get('/', async (req, reply) => {
 
 app.get('/throws-error', async () => {
   throw new Error('voluntary error')
+})
+
+app.get('/needs-auth', authRouteSchema, async (req, reply) => {
+  reply.code(200).send()
 })
 
 app.listen(process.env.PORT || 3100)
