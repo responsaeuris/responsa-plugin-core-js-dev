@@ -30,12 +30,12 @@ describe('richMessage results', () => {
       description: data.p.someKey,
       action_title: data.p.someKey,
       image_url: data.p.someKey,
-      gallery_urls: [],
+      gallery_urls: []
     })
     const actual = sut.toRich(
       {
         prop: { value: 'some-value' },
-        p: { someKey: 'another-value' },
+        p: { someKey: 'another-value' }
       },
       converter
     )
@@ -52,7 +52,7 @@ describe('richMessage results', () => {
 describe('richMessage invalid convertions', () => {
   const defaultInput = {
     prop: { value: 'some-value' },
-    p: { someKey: 'another-value' },
+    p: { someKey: 'another-value' }
   }
 
   const doCheck = (converter, expectedErrorMsg, input = defaultInput) => {
@@ -86,7 +86,7 @@ describe('richMessage invalid convertions', () => {
     const converter = (data) => ({
       text: data.prop.value,
       payload: data.p,
-      image_url: data,
+      image_url: data
     })
     doCheck(converter, "Error: invalid converter 'image_url' is not a string")
   })
@@ -95,7 +95,7 @@ describe('richMessage invalid convertions', () => {
     const converter = (data) => ({
       text: data.prop.value,
       payload: data.p,
-      gallery_urls: data,
+      gallery_urls: data
     })
     doCheck(converter, "Error: invalid converter 'gallery_urls' is not an array of strings")
   })
@@ -104,7 +104,7 @@ describe('richMessage invalid convertions', () => {
     const converter = (data) => ({
       text: data.prop.value,
       payload: data.p,
-      gallery_urls: ['string-here', data.p],
+      gallery_urls: ['string-here', data.p]
     })
     doCheck(converter, "Error: invalid converter 'gallery_urls' is not an array of strings")
   })
@@ -117,24 +117,24 @@ describe('richMessage model validation', () => {
       type: 'object',
       properties: {
         text: {
-          type: 'string',
+          type: 'string'
         },
         description: {
           type: 'string',
-          nullable: true,
+          nullable: true
         },
         image_url: {
           type: 'string',
-          nullable: true,
+          nullable: true
         },
         gallery_urls: {
           type: 'array',
           items: {
-            type: 'string',
+            type: 'string'
           },
-          nullable: true,
-        },
-      },
+          nullable: true
+        }
+      }
     }
 
     const actual = sut.ResponsaRichMessageResource

@@ -4,20 +4,20 @@ module.exports = {
     statusCode: {
       type: 'integer',
       format: 'int32',
-      nullable: false,
+      nullable: false
     },
     error: {
       type: 'string',
-      nullable: false,
+      nullable: false
     },
     message: {
       type: 'string',
-      nullable: false,
+      nullable: false
     },
     stackTrace: {
       type: 'string',
-      nullable: true,
-    },
+      nullable: true
+    }
   },
-  additionalProperties: true,
+  additionalProperties: true
 }
