@@ -15,7 +15,7 @@ const setupDocumentation = require('./documentation/setup')
 
 let unrestrictedRoutes = null
 
-const isEmptyObject = (obj) => Object.keys(obj).length === 0 && typeof obj === 'object'
+const isValidObject = (obj) => obj !== undefined && obj !== null && Object.keys(obj).length > 0 && typeof obj === 'object'
 
 const defaultOptions = {
   appName: 'Application Name',
@@ -61,17 +61,17 @@ const loggerFormatter = (req, res, err, elapsed) => ({
   conversationId: req.headers[config.HEADER_CONVERSATION_ID.toLowerCase()],
   responsaTS: req.headers[config.HEADER_RESPONSA_TS.toLowerCase()],
   clientTS: res.getHeader(config.HEADER_CLIENT_TS),
-  requestBody: !isEmptyObject(req.body) ? req.body : {},
-  requestHasBody: !isEmptyObject(req.body),
+  requestBody: isValidObject(req.body) ? req.body : {},
+  requestHasBody: isValidObject(req.body),
   requestIsHttps: req.protocol === 'https',
   requestContentLength: req.headers['content-length'] ? req.headers['content-length'] : 0,
   requestContentType: req.headers['content-type'] ? req.headers['content-type'] : '',
-  requestQueryString: !isEmptyObject(req.query) ? req.query : {},
-  requestQueryStringHasValue: !isEmptyObject(req.query),
+  requestQueryString: isValidObject(req.query) ? req.query : {},
+  requestQueryStringHasValue: isValidObject(req.query),
   requestHeaders: req.headers,
   requestHeadersCount: req.headers.length,
-  responseBody: res.hasBody ? JSON.parse(res.payload) : {},
-  responseHasBody: res.hasBody,
+  responseBody: res._hasBody ? JSON.parse(res.payload) : {},
+  responseHasBody: res._hasBody,
   requestMethod: req.method,
   requestPath: req.url,
   statusCode: res.statusCode,
