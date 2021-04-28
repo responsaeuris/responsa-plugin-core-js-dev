@@ -15,7 +15,9 @@ const setupDocumentation = require('./documentation/setup')
 
 let unrestrictedRoutes = null
 
-const isValidObject = (obj) => obj !== undefined && obj !== null && Object.keys(obj).length > 0 && typeof obj === 'object'
+const hasValue = (obj) => obj !== undefined && obj !== null && obj !== ''
+
+const isValidObject = (obj) => hasValue(obj) && Object.keys(obj).length > 0 && typeof obj === 'object'
 
 const defaultOptions = {
   appName: 'Application Name',
@@ -70,8 +72,8 @@ const loggerFormatter = (req, res, err, elapsed) => ({
   requestQueryStringHasValue: isValidObject(req.query),
   requestHeaders: req.headers,
   requestHeadersCount: req.headers.length,
-  responseBody: res._hasBody ? JSON.parse(res.payload) : {},
-  responseHasBody: res._hasBody,
+  responseBody: hasValue(res.payload) ? JSON.parse(res.payload) : {},
+  responseHasBody: hasValue(res.payload),
   requestMethod: req.method,
   requestPath: req.url,
   statusCode: res.statusCode,
