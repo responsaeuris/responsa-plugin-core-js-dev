@@ -213,14 +213,15 @@ describe('Logger Formatter', () => {
     'x-secret': 'secret'
   }
   it('logs message with res, req and elapsed', async () => {
-    const qry = 'param1=1'
+    const qryStr = 'param1=1'
+    const qryObj = { param1: 1 }
     const app = await helper.setupApp()
     const response = await helper.doGet(
       app,
-      `/required-querystring-param-and-response?${qry}`,
+      `/required-querystring-param-and-response?${qryStr}`,
       requiredHeaders
     )
-    response.raw.req.query = qry
+    response.raw.req.query = qryObj
     const sut = core.loggerFormatter
     const actual = sut(response.raw.req, response.raw.res, null, 1.98975)
     expect(actual).toBeDefined()
@@ -228,7 +229,7 @@ describe('Logger Formatter', () => {
     expect(actual.responsaTS).toBeDefined()
     expect(actual.clientTS).toBeDefined()
     expect(actual.requestBody).toBeDefined()
-    expect(actual.requestBody).toEqual('')
+    expect(actual.requestBody).toEqual({})
     expect(actual.requestHasBody).toBeDefined()
     expect(actual.requestHasBody).toBeBoolean()
     expect(actual.requestHasBody).toBeFalse()
@@ -236,23 +237,23 @@ describe('Logger Formatter', () => {
     expect(actual.requestIsHttps).toBeBoolean()
     expect(actual.requestContentLength).toBeDefined()
     expect(actual.requestQueryString).toBeDefined()
-    expect(actual.requestQueryString).toEqual(qry)
+    expect(actual.requestQueryString).toEqual(qryObj)
     expect(actual.requestQueryStringHasValue).toBeDefined()
     expect(actual.requestQueryStringHasValue).toBeTrue()
     expect(actual.requestHeaders).toBeDefined()
     expect(actual.requestHeaders).toBeObject()
     expect(actual.responseBody).toBeDefined()
-    expect(actual.responseBody).toEqual('{"field":"value"}')
+    expect(actual.responseBody).toEqual({ field: 'value' })
     expect(actual.responseHasBody).toBeDefined()
     expect(actual.responseHasBody).toBeTrue()
-    expect(actual.RequestMethod).toBeDefined()
-    expect(actual.RequestMethod).toEqual('GET')
-    expect(actual.RequestPath).toBeDefined()
-    expect(actual.RequestPath).toEqual(`/required-querystring-param-and-response?${qry}`)
-    expect(actual.StatusCode).toBeDefined()
-    expect(actual.StatusCode).toEqual(200)
-    expect(actual.Elapsed).toBeDefined()
-    expect(actual.Elapsed).toEqual(1.98975)
+    expect(actual.requestMethod).toBeDefined()
+    expect(actual.requestMethod).toEqual('GET')
+    expect(actual.requestPath).toBeDefined()
+    expect(actual.requestPath).toEqual(`/required-querystring-param-and-response?${qryStr}`)
+    expect(actual.statusCode).toBeDefined()
+    expect(actual.statusCode).toEqual(200)
+    expect(actual.elapsed).toBeDefined()
+    expect(actual.elapsed).toEqual(1.98975)
     expect(actual.exceptionMessage).toBeDefined()
     expect(actual.exceptionMessage).toEqual('')
     expect(actual.exceptionStackTrace).toBeDefined()
