@@ -13,13 +13,8 @@ module.exports = (elasticOptions) => {
     }
   }
 
-  const logFormatters = {
-    bindings: formatters.bindings,
-    log: formatters.log
-  }
-
   return pino(
-    { level: 'info', hooks, logFormatters },
+    { level: 'info', hooks, formatters },
     pinoms.multistream(streamsFactory(elasticOptions))
   )
 }
