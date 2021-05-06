@@ -79,13 +79,13 @@ const addErrorRoutes = (app) => {
 }
 
 /* eslint-disable global-require */
-const setupApp = async (config) => {
+const setupApp = async (fastifyOptions, coreOptions) => {
   cache.nuke()
 
-  const conf = config || {}
+  const conf = coreOptions || {}
   conf.prefix = '/core'
 
-  const app = fastify()
+  const app = fastify(fastifyOptions)
   app.decorate('auth', (req, res, next) => {
     if (req.headers['x-secret'] !== undefined && req.headers['x-secret'].toString() === 'secret') {
       return next()

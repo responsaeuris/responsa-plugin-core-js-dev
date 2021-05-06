@@ -16,8 +16,8 @@ module.exports = (req, res, err, elapsed) => ({
   requestQueryStringHasValue: isValidObject(req.query),
   requestHeaders: req.headers,
   requestHeadersCount: req.headers.length,
-  responseBody: hasValue(res.payload) ? JSON.parse(res.payload) : {},
-  responseHasBody: hasValue(res.payload),
+  responseBody: hasValue(res.payload) && isValidJson(res.payload) ? JSON.parse(res.payload) : {},
+  responseHasBody: hasValue(res.payload) && isValidJson(res.payload),
   requestMethod: req.method,
   requestPath: req.url,
   statusCode: res.statusCode,
@@ -25,3 +25,12 @@ module.exports = (req, res, err, elapsed) => ({
   exceptionMessage: err ? err.message : '',
   exceptionStackTrace: err ? err.stack : ''
 })
+
+const isValidJson = (input) => {
+  try {
+    JSON.parse(input)
+    return true
+  } catch (error) {
+    return false
+  }
+}
