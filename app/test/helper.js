@@ -79,7 +79,7 @@ const addErrorRoutes = (app) => {
 }
 
 /* eslint-disable global-require */
-const setupApp = async (fastifyOptions, coreOptions) => {
+const setupApp = async (coreOptions, fastifyOptions) => {
   cache.nuke()
 
   const conf = coreOptions || {}

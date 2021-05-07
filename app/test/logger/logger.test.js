@@ -48,7 +48,7 @@ describe('Logger - Log writing check ', () => {
 
   it('Search for log', async () => {
     const loggerInstance = sut(elasticOptions)
-    const app = await helper.setupApp({ logger: loggerInstance })
+    const app = await helper.setupApp(null, { logger: loggerInstance })
     const qsValue = `EurisTest${Date.now()}`
 
     await helper.doGet(app, `/required-querystring-param?param1=${qsValue}`, requiredHeaders)
