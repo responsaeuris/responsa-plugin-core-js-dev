@@ -1,5 +1,5 @@
 require('jest-extended')
-require('dotenv').config()
+require('dotenv').config({ path: './test/.env' })
 const sut = require('./../../logger/logger')
 const helper = require('../helper')
 const { Client } = require('@elastic/elasticsearch')
