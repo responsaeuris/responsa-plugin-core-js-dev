@@ -9,3 +9,10 @@ sed -i "s|CI_PUTS_HERE_DEPLOY_DATE|$today|g" /_/app/routes/status/statusRoute.js
 
 cat /_/app/routes/status/statusRoute.js
 
+echo "" && echo "***********************************************************" && /_/build/scripts/print-step.sh "CREATING TEST ENV"
+
+rm -f /_/app/test/.env
+echo "ELASTIC_URI=${ELASTIC_URI}" > /_/app/test/.env
+echo "ELASTIC_USER=${ELASTIC_USER}" >> /_/app/test/.env
+echo "ELASTIC_PASSWORD=${ELASTIC_PASSWORD}" >> /_/app/test/.env
+echo "ELASTIC_INDEX=${ELASTIC_INDEX}" >> /_/app/test/.env
