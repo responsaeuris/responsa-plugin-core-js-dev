@@ -1,7 +1,7 @@
 const config = require('../../config/constants')
-
-const hasValue = (obj) => obj !== undefined && obj !== null && obj !== ''
-const isValidObject = (obj) => hasValue(obj) && Object.keys(obj).length > 0 && typeof obj === 'object'
+const hasValue = require('./validators/has-value')
+const isValidObject = require('./validators/is-valid-object')
+const isValidJSON = require('./validators/is-valid-json')
 
 module.exports = (req, res, err, elapsed) => ({
   conversationId: req.headers[config.HEADER_CONVERSATION_ID.toLowerCase()],
@@ -16,8 +16,8 @@ module.exports = (req, res, err, elapsed) => ({
   requestQueryStringHasValue: isValidObject(req.query),
   requestHeaders: req.headers,
   requestHeadersCount: req.headers.length,
-  responseBody: hasValue(res.payload) && isValidJson(res.payload) ? JSON.parse(res.payload) : {},
-  responseHasBody: hasValue(res.payload) && isValidJson(res.payload),
+  responseBody: hasValue(res.payload) ? (isValidJSON(res.payload) ? JSON.parse(res.payload) : { payload: res.payload }) : {},
+  responseHasBody: hasValue(res.payload),
   requestMethod: req.method,
   requestPath: req.url,
   statusCode: res.statusCode,
@@ -25,12 +25,3 @@ module.exports = (req, res, err, elapsed) => ({
   exceptionMessage: err ? err.message : '',
   exceptionStackTrace: err ? err.stack : ''
 })
-
-const isValidJson = (input) => {
-  try {
-    JSON.parse(input)
-    return true
-  } catch (error) {
-    return false
-  }
-}

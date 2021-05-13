@@ -1,7 +1,7 @@
 const pinoElastic = require('pino-elasticsearch')
 
-module.exports = (options) => ({
-  stream: pinoElastic({
+module.exports = (options) => {
+  const esStream = pinoElastic({
     index: `${options.index.toLowerCase()}-%{DATE}`,
     consistency: 'one',
     node: options.uri,
@@ -13,4 +13,6 @@ module.exports = (options) => ({
     'es-version': 7,
     'flush-bytes': 10
   })
-})
+
+  return { stream: esStream }
+}

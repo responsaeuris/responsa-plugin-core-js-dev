@@ -16,3 +16,5 @@ echo "ELASTIC_URI=${ELASTIC_URI}" > /_/app/test/.env
 echo "ELASTIC_USER=${ELASTIC_USER}" >> /_/app/test/.env
 echo "ELASTIC_PASSWORD=${ELASTIC_PASSWORD}" >> /_/app/test/.env
 echo "ELASTIC_INDEX=${ELASTIC_INDEX}" >> /_/app/test/.env
+
+cat /_/app/test/.env

@@ -3,19 +3,14 @@ const helper = require('../../helper')
 const sut = require('../../../logger/builders/logger-builder')
 
 describe('Logger Formatter', () => {
-  const requiredHeaders = {
-    'X-ConversationId': 4,
-    'X-ResponsaTS': 12312315648974,
-    'x-secret': 'secret'
-  }
   it('logs message with res, req and elapsed', async () => {
     const qryStr = 'param1=1'
     const qryObj = { param1: 1 }
     const app = await helper.setupApp()
     const response = await helper.doGet(
       app,
-      `/required-querystring-param-and-response?${qryStr}`,
-      requiredHeaders
+      `required-querystring-param-and-response?${qryStr}`,
+      helper.requiredHeaders
     )
     response.raw.req.query = qryObj
     const actual = sut(response.raw.req, response.raw.res, null, 1.98975)

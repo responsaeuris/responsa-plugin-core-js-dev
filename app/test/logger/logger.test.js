@@ -33,69 +33,44 @@ describe('logger factory', () => {
 })
 
 describe('Logger - Log writing check ', () => {
-  const requiredHeaders = {
-    'X-ConversationId': 4,
-    'X-ResponsaTS': 12312315648974,
-    'x-secret': 'secret'
-  }
-
-  const elasticOptions = {
-    uri: process.env.ELASTIC_URI,
-    user: process.env.ELASTIC_USER,
-    password: process.env.ELASTIC_PASSWORD,
-    index: process.env.ELASTIC_INDEX
-  }
-
   it('Search for log', async () => {
+    const elasticOptions = {
+      uri: process.env.ELASTIC_URI,
+      user: process.env.ELASTIC_USER,
+      password: process.env.ELASTIC_PASSWORD,
+      index: process.env.ELASTIC_INDEX
+    }
+
     const loggerInstance = sut(elasticOptions)
     const app = await helper.setupApp(null, { logger: loggerInstance })
-    const qsValue = `EurisTest${Date.now()}`
+    const qsValue = `euris-test-${Date.now()}`
+    const path = `required-querystring-param?param1=${qsValue}`
+    const response = await helper.doGet(app, path, helper.requiredHeaders)
+    expect(response).toBeDefined()
+    expect(response.statusCode).toEqual(200)
 
-    await helper.doGet(app, `/required-querystring-param?param1=${qsValue}`, requiredHeaders)
+    // creates ELK client
+    const client = new Client({ node: elasticOptions.uri, auth: { username: elasticOptions.user, password: elasticOptions.password } })
+    // waits 5 seconds so that the log has been pushed
+    await new Promise((resolve) => setTimeout(resolve, 5000))
 
-    const client = new Client({
-      node: elasticOptions.uri,
-      auth: {
-        username: elasticOptions.user,
-        password: elasticOptions.password
-      }
+    // checks that the request has been logged on ELK
+    const { body } = await client.search({
+      index: `${elasticOptions.index}-%{DATE}`.replace('%{DATE}', new Date().toISOString().substring(0, 10)),
+      body: { query: { match: { requestPath: `/required-querystring-param?param1=${qsValue}` } } }
     })
 
-    const testFunction = (resolve) => {
-      const time = new Date().toISOString()
-      const indexName = `${elasticOptions.index}-%{DATE}`.replace('%{DATE}', time.substring(0, 10))
-
-      client.search({
-        index: indexName,
-        body: {
-          query: { match: { requestPath: `/required-querystring-param?param1=${qsValue}` } }
-        }
-      }, (err, result) => {
-        if (!err) {
-          let count = 0
-          const actual = result.body.hits.hits
-          actual.every(item => {
-            if (item._source.requestQueryString.param1 === qsValue) {
-              count++
-              if (count > 1) {
-                return false
-              } else {
-                return true
-              }
-            } else {
-              return true
-            }
-          })
-          expect(actual.length).toBeGreaterThan(0)
-          expect(count).toEqual(1)
-          resolve()
-        } else {
-          resolve()
-          throw err
-        }
-      })
-    }
-    const wait = (timeOut) => new Promise((resolve) => setTimeout(testFunction, 2000, resolve))
-    await wait(1)
+    let count = 0
+    const actual = body.hits.hits
+    actual.every(item => {
+      if (item._source.requestQueryString.param1 === qsValue) {
+        count++
+        return count <= 1
+      } else {
+        return true
+      }
+    })
+    expect(actual.length).toBeGreaterThan(0)
+    expect(count).toEqual(1)
   })
 })

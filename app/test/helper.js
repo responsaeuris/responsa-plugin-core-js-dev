@@ -3,6 +3,12 @@ const schemas = require('../examples/basic/utils/schemas')
 const authRouteSchema = require('../examples/basic/utils/auth-route-options')
 const cache = require('../cache/cache')
 
+const requiredHeaders = {
+  'X-ConversationId': 4,
+  'X-ResponsaTS': 12312315648974,
+  'x-secret': 'secret'
+}
+
 const doGet = async (fastifyInstance, path, headers) => {
   const serverResponse = await fastifyInstance.inject({
     url: path,
@@ -102,4 +108,4 @@ const setupApp = async (coreOptions, fastifyOptions) => {
   return app.ready()
 }
 
-module.exports = { doGet, doPost, setupApp }
+module.exports = { doGet, doPost, setupApp, requiredHeaders }
