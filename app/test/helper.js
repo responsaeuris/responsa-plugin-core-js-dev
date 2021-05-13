@@ -3,6 +3,12 @@ const schemas = require('../examples/basic/utils/schemas')
 const authRouteSchema = require('../examples/basic/utils/auth-route-options')
 const cache = require('../cache/cache')
 
+const requiredHeaders = {
+  'X-ConversationId': 4,
+  'X-ResponsaTS': 12312315648974,
+  'x-secret': 'secret'
+}
+
 const doGet = async (fastifyInstance, path, headers) => {
   const serverResponse = await fastifyInstance.inject({
     url: path,
@@ -79,13 +85,13 @@ const addErrorRoutes = (app) => {
 }
 
 /* eslint-disable global-require */
-const setupApp = async (config) => {
+const setupApp = async (coreOptions, fastifyOptions) => {
   cache.nuke()
 
-  const conf = config || {}
+  const conf = coreOptions || {}
   conf.prefix = '/core'
 
-  const app = fastify()
+  const app = fastify(fastifyOptions)
   app.decorate('auth', (req, res, next) => {
     if (req.headers['x-secret'] !== undefined && req.headers['x-secret'].toString() === 'secret') {
       return next()
@@ -102,4 +108,4 @@ const setupApp = async (config) => {
   return app.ready()
 }
 
-module.exports = { doGet, doPost, setupApp }
+module.exports = { doGet, doPost, setupApp, requiredHeaders }

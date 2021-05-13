@@ -12,7 +12,7 @@
     "postinstall": "shx sed -i \"s/preinstall/do_not_run/g\" ../package.json && shx sed -i \"s/postinstall/do_not_run2/g\" ../package.json",
     "test": "npm run lint && npm run jest",
     "lint": "standard ./",
-    "jest": "node --trace-warnings node_modules/.bin/jest --detectOpenHandles --watchAll",
+    "jest": "jest --detectOpenHandles --watchAll",
     "jest:ci": "jest --forceExit --ci --testResultsProcessor=jest-multiple-result-processors --coverage=true",
     "start": "node ./examples/basic/server.js",
     "dev": "PORT=3100 node ./examples/basic/server.js",
@@ -26,6 +26,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@elastic/elasticsearch": "^7.10.0",
+    "dotenv": "^9.0.0",
     "fastify": "^3.0.0",
     "fastify-autoload": "^3.0.2",
     "fastify-error": "^0.2.0",
@@ -69,5 +71,9 @@
       "node_modules/**"
     ],
     "parser": "babel-eslint"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 15000
   }
 }
