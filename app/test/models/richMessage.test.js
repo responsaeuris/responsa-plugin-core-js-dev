@@ -129,7 +129,7 @@ describe('richMessage model validation', () => {
         },
         card_html: {
           type: 'string',
-          nullable: true,
+          nullable: true
         },
         gallery_urls: {
           type: 'array',

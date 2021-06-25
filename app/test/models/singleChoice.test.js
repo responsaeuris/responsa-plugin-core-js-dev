@@ -162,7 +162,7 @@ describe('singleChoice model validation', () => {
         },
         card_html: {
           type: 'string',
-          nullable: true,
+          nullable: true
         },
         gallery_urls: {
           type: 'array',

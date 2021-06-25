@@ -43,7 +43,7 @@ module.exports.ResponsaRichMessageResource = {
     },
     card_html: {
       type: 'string',
-      nullable: true,
+      nullable: true
     },
     gallery_urls: {
       type: 'array',
