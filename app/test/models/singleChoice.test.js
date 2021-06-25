@@ -160,6 +160,10 @@ describe('singleChoice model validation', () => {
           type: 'string',
           nullable: true
         },
+        card_html: {
+          type: 'string',
+          nullable: true,
+        },
         gallery_urls: {
           type: 'array',
           items: {
