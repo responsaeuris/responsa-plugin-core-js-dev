@@ -1,6 +1,6 @@
 {
   "name": "responsa-plugin-core-js",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Responsa Plugins Core",
   "main": "index.js",
   "directories": {
