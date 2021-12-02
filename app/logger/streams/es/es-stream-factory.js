@@ -2,15 +2,22 @@ const pinoElastic = require('pino-elasticsearch')
 const indexFactory = require('./es-index-factory')
 
 module.exports = (options) => {
-  const esStream = pinoElastic({
+  const pinoOpts = {
     index: indexFactory(options),
     consistency: 'one',
-    node: options.uri,
-    auth: { apiKey: options.apiKey },
+    cloud: {
+      id: options.uri
+    },
+    auth: {
+      username: options.user,
+      password: options.password
+    },
     rejectUnauthorized: false,
     'es-version': 7,
     'flush-bytes': 10
-  })
+  }
+
+  const esStream = pinoElastic(pinoOpts)
 
   // esStream.on('unknown', (obj) => {
   //   console.log('unknown -> ' + JSON.stringify(obj))

@@ -4,14 +4,14 @@ const sut = require('./../../logger/logger')
 const helper = require('../helper')
 const { Client } = require('@elastic/elasticsearch')
 
-describe('logger factory', () => {
-  const elasticOptions = {
-    uri: 'https://localhost:9200',
-    user: 'newboss',
-    password: 'newboss',
-    index: 'some-index'
-  }
+const elasticOptions = {
+  uri: process.env.ELASTIC_URI,
+  user: process.env.ELASTIC_USERNAME,
+  password: process.env.ELASTIC_PASSWORD,
+  index: process.env.ELASTIC_INDEX
+}
 
+describe('logger factory', () => {
   const getLoggerStreams = (logger) =>
     logger[Reflect.ownKeys(logger).find((key) => key.toString() === 'Symbol(pino.stream)')]
 
@@ -33,13 +33,7 @@ describe('logger factory', () => {
 })
 
 describe('Logger - Log writing check ', () => {
-  it('Search for log', async () => {
-    const elasticOptions = {
-      uri: process.env.ELASTIC_URI,
-      apiKey: process.env.ELASTIC_API_KEY,
-      index: process.env.ELASTIC_INDEX
-    }
-
+  it('Search for log - cloud', async () => {
     const loggerInstance = sut(elasticOptions)
     const app = await helper.setupApp(null, { logger: loggerInstance })
     const qsValue = `euris-test-${Date.now()}`
@@ -49,7 +43,7 @@ describe('Logger - Log writing check ', () => {
     expect(response.statusCode).toEqual(200)
 
     // creates ELK client
-    const client = new Client({ node: elasticOptions.uri, auth: { apiKey: elasticOptions.apiKey } })
+    const client = new Client({ cloud: { id: elasticOptions.uri }, auth: { username: elasticOptions.user, password: elasticOptions.password } })
     // waits 5 seconds so that the log has been pushed
     await new Promise((resolve) => setTimeout(resolve, 5000))
 
