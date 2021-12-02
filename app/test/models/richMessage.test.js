@@ -123,7 +123,19 @@ describe('richMessage model validation', () => {
           type: 'string',
           nullable: true
         },
+        bg_color: {
+          type: 'string',
+          nullable: true
+        },
+        font_color: {
+          type: 'string',
+          nullable: true
+        },
         image_url: {
+          type: 'string',
+          nullable: true
+        },
+        card_html: {
           type: 'string',
           nullable: true
         },
