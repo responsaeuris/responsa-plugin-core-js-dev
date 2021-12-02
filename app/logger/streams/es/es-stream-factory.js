@@ -1,10 +1,13 @@
 const pinoElastic = require('pino-elasticsearch')
+const indexFactory = require('./es-index-factory')
 
 module.exports = (options) => {
-  const esStream = pinoElastic({
-    index: `${options.index.toLowerCase()}-%{DATE}`,
+  const pinoOpts = {
+    index: indexFactory(options),
     consistency: 'one',
-    node: options.uri,
+    cloud: {
+      id: options.uri
+    },
     auth: {
       username: options.user,
       password: options.password
@@ -12,7 +15,22 @@ module.exports = (options) => {
     rejectUnauthorized: false,
     'es-version': 7,
     'flush-bytes': 10
-  })
+  }
+
+  const esStream = pinoElastic(pinoOpts)
+
+  // esStream.on('unknown', (obj) => {
+  //   console.log('unknown -> ' + JSON.stringify(obj))
+  // })
+  // esStream.on('insertError', (obj) => {
+  //   console.log('insertError -> ' + JSON.stringify(obj))
+  // })
+  // esStream.on('insert', (obj) => {
+  //   console.log('insert -> ' + JSON.stringify(obj))
+  // })
+  // esStream.on('error', (obj) => {
+  //   console.log('error -> ' + JSON.stringify(obj))
+  // })
 
   return { stream: esStream }
 }

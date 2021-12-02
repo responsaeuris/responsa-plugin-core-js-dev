@@ -1,6 +1,6 @@
 {
   "name": "responsa-plugin-core-js",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "description": "Responsa Plugins Core",
   "main": "index.js",
   "directories": {
@@ -35,9 +35,9 @@
     "fastify-plugin": "^3.0.0",
     "fastify-swagger": "^3.5.0",
     "node-cache": "^5.1.2",
-    "pino": "^6.9.0",
-    "pino-elasticsearch": "^5.4.0",
-    "pino-multi-stream": "^5.1.1"
+    "pino": "^7.2.0",
+    "pino-elasticsearch": "^6.2.0",
+    "pino-multi-stream": "^6.0.0"
   },
   "devDependencies": {
     "jest": "^26.6.3",
