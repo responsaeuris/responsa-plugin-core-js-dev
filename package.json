@@ -1,6 +1,6 @@
 {
   "name": "responsa-plugin-core-js",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "Responsa Plugins Core",
   "main": "index.js",
   "directories": {
@@ -45,7 +45,7 @@
     "jest-junit-reporter": "^1.1.0",
     "jest-multiple-result-processors": "^0.0.3",
     "jest-sonar-reporter": "^2.0.0",
-    "shx": "^0.3.3",
+    "shx": "^0.3.4",
     "standard": "^16.0.3"
   },
   "jestTestResultProcessors": [
